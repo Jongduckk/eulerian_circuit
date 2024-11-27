@@ -27,7 +27,17 @@ canvas.addEventListener('click', (event) => {
         edges.push([node.id]);
       // 엣지의 끝 노드일 때
       } else {
-        edges[edges.length - 1].push(node.id);
+        const lastNode = edges[edges.length - 1][0];
+        // 중복 방지: 동일한 엣지가 이미 존재하는지 확인
+        if (!edges.some((edge) =>
+            (edge[0] === lastNode && edge[1] === node.id) ||
+            (edge[1] === lastNode && edge[0] === node.id)
+        )) {
+          edges[edges.length - 1].push(node.id);
+        } else {
+          // 중복된 엣지일 경우, 새로운 추가를 시도하지 않음
+          edges.pop(); // 이전에 잘못 추가된 빈 배열 제거
+        }
       }
       drawGraph();
       return;
